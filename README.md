@@ -40,5 +40,3 @@ A destacar:
 -He colocado comentarios sobre mi análisis y obersvaciones en cada ejercicio para facilitar la lectura.
 -He comprobado si el contenido de las tablas estaba escrito en mayusculas/minusculas, porque si no las comparaciones podrian no darme match por diferencias de mayusculas/minusuculas. tambien uso lower() para poner todo en minusculas y demostrar como podemos evitar discrepancias.
 
-
-<img width="527" height="702" alt="image" src="https://github.com/user-attachments/assets/a7652aa6-4dbc-45a7-b9b1-5dfb33d4c3ec" />
