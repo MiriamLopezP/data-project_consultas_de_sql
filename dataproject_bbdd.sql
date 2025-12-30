@@ -50,14 +50,14 @@ order by length asc;
 -- ============================================
 -- EJERCICIO 6. Encuentra el nombre y apellido de los actores que tengan ‘Allen’ en su apellido.
 -- ============================================
---Los string de last name o first name estan en mayusculas, LIKE es case sensitive, por lo que meto ALLEN en mayuscula. Tambien podria usar ILIKE para evitar estos problemas.
+--Los string de last name o first name estan en mayusculas, LIKE es case sensitive, por lo que meto ALLEN en mayuscula. Tambien podria usar lower() para ponerlo todo en minuscula
 select first_name, last_name
 from actor
 where last_name like '%ALLEN%';
 -- ============================================
 -- EJERCICIO 7. Encuentra la cantidad total de películas en cada clasificación de la tabla “film” y muestra la clasificación junto con el recuento.
 -- ============================================
-select rating, COUNT(*) as suma_peliculas
+select rating, count(*) as suma_peliculas
 from film
 group by rating;
 -- ============================================
@@ -71,7 +71,7 @@ where rating = 'PG-13' or length > 180;
 -- EJERCICIO 9. Encuentra la variabilidad de lo que costaría reemplazar las películas.
 -- ============================================
 --Calculamos la variabilidad del coste de reemplazo de las películas usando la función VARIANCE aplicada a la columna replacement_cost de la tabla film
-select VARIANCE(replacement_cost) as variabilidad_reemplazo
+select variance(replacement_cost) as variabilidad_reemplazo
 from film;
 
 -- ============================================
@@ -168,7 +168,7 @@ from film f
 join film_category fc on f.film_id = fc.film_id
 join category c on fc.category_id = c.category_id
 group by c.name
-having AVG(f.length) > 110;
+having avg(f.length) > 110;
 
 -- ============================================
 -- EJERCICIO 21. ¿Cuál es la media de duración del alquiler de las películas?
