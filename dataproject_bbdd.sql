@@ -84,18 +84,21 @@ from film;
 -- EJERCICIO 11. Encuentra lo que costó el antepenúltimo alquiler ordenado por día.
 -- ============================================
 --Para sacar el anepenultimo alquier necesito usar order by, limit y offset y linkear las tablas payment y rental
-select b.amount
-from rental a
-JOIN payment b on a.rental_id = b.rental_id
-oder by a.rental_date 
- desc limit 1 
- offset 2;
+select p.amount
+from payment p
+join (
+    select rental_id
+    from rental a
+    order by a.rental_date desc
+    limit 1 
+    offset 2
+) x on p.rental_id = x.rental_id;
 -- esto me ha dado un 0.. Voy a hacer unas comprobaciones parte por partee, compruebo el rental id asociado al antepenultimo ordenado por fecha.
 select rental_id 
 from rental a
 order by a.rental_date 
- desc limit 1 
- offset 2;
+desc limit 1 
+offset 2;
 --esto me devuelve un id el cual voy  usar para sacar la fila de payments asociado a ese rental id
 select *
 from payment
@@ -189,7 +192,7 @@ from actor a;
 select date(r.rental_date) as fecha, count(*) AS sum_alq_dia
 from rental r
 group by fecha
-order by sum_dia desc;
+order by sum_alq_dia desc;
 
 
 -- ============================================
@@ -225,10 +228,10 @@ where p.amount > (select avg(amount) from payment);
 -- ============================================
 -- EJERCICIO 28. Muestra el id de los actores que hayan participado en más de 40 películas.
 -- ============================================
-select a.first_name, a.last_name, count(*) as total_peliculas
+select a.actor_id  , count(*) as total_peliculas
 from actor a
 join film_actor fa on a.actor_id =fa.actor_id
-group by a.first_name, a.last_name
+group by a.actor_id 
 having count(*) > 40;
 
 -- ============================================
@@ -238,7 +241,7 @@ having count(*) > 40;
 select f.title, count (i.inventory_id) as cantidad
 from film f 
 left join inventory i on f.film_id =i.film_id
-group by f.film_id ;
+group by f.film_id, f.title;
 
 
 -- ============================================
@@ -417,7 +420,7 @@ order by a.first_name;
 select c.customer_id, c.first_name , c.last_name , count(rental_id) as total_alquileres_por_cliente
 from rental r
 right join customer c on c.customer_id = r.customer_id 
-group by c.customer_id 
+group by c.customer_id, c.customer_id, c.first_name , c.last_name
 order by c.customer_id asc;
 
 -- ============================================
@@ -432,12 +435,11 @@ where c."name"  = 'Action';
 -- ============================================
 -- EJERCICIO 51. Crea una tabla temporal llamada “cliente_rentas_temporal” para almacenar el total de alquileres por cliente.
 -- ============================================
-with cliente_rentas_temporal as ( 
+create temp table cliente_rentas_temporal as ( 
 select c.first_name , c.last_name, r.customer_id, count(*) as total_alquileres
 from rental r 
 join customer c on c.customer_id = r.customer_id 
-group by r.customer_id, c.first_name , c.last_name )
-select * from cliente_rentas_temporal;
+group by r.customer_id, c.first_name , c.last_name );
 
 
 -- ============================================
@@ -465,7 +467,7 @@ from customer c
 join rental r on r.customer_id  = c.customer_id 
 join inventory i on i.inventory_id  = r.inventory_id 
 join film f on f.film_id = i.film_id 
-where lower(c.first_name) = 'tammy' and lower(c.last_name) = 'sanders'
+where lower(c.first_name) = 'tammy' and lower(c.last_name) = 'sanders' and r.return_date is NULL
 order by f.title asc;
 
 -- ============================================
